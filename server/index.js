@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -7,10 +9,11 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "sekolah", // ganti sesuai DB kamu
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
 });
 
 db.connect((err) => {
@@ -37,7 +40,7 @@ app.post("/siswa", (req, res) => {
     (err) => {
       if (err) return res.json(err);
       res.json({ message: "success" });
-    },
+    }
   );
 });
 
@@ -57,10 +60,12 @@ app.put("/siswa/:npm", (req, res) => {
     (err) => {
       if (err) return res.json(err);
       res.json({ message: "updated" });
-    },
+    }
   );
 });
 
-app.listen(5000, () => {
-  console.log("Server jalan di http://localhost:5000 🚀");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server jalan di port ${PORT} 🚀`);
 });
